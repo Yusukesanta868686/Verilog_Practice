@@ -24,7 +24,7 @@ def txt_to_int32(fixed_point_list):
 def int32_to_bytes(int32_list):
     result = []
     for value in int32_list:
-        result.append(np.clip(int(value / (2 ** 8)), -32768, 32767))
+        result.append(np.clip(int(value / (2 ** 16)), -32768, 32767))
     return result
 
 # WAVファイルを生成

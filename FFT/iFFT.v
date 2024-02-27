@@ -7,10 +7,10 @@ module iFFT1(
     input signed [31:0] a_im,
     input signed [31:0] b_re,
     input signed [31:0] b_im,
-    output wire signed [31:0] c_re,
-    output wire signed [31:0] c_im,
-    output wire signed [31:0] d_re,
-    output wire signed [31:0] d_im,
+    output signed [31:0] c_re,
+    output signed [31:0] c_im,
+    output signed [31:0] d_re,
+    output signed [31:0] d_im,
     output out_en
 ); 
 
@@ -41,10 +41,10 @@ module iFFT2(
     input signed [31:0] a_im,
     input signed [31:0] b_re,
     input signed [31:0] b_im,
-    output wire signed [31:0] c_re,
-    output wire signed [31:0] c_im,
-    output wire signed [31:0] d_re,
-    output wire signed [31:0] d_im,
+    output signed [31:0] c_re,
+    output signed [31:0] c_im,
+    output signed [31:0] d_re,
+    output signed [31:0] d_im,
     output out_en
 ); 
 
@@ -60,19 +60,19 @@ always @(posedge clk) begin
             d_im_dum <= a_im - b_im; 
         end
         1: begin
-            c_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} + b_re * `cos2 - b_im * `sin2;
-            c_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} + b_re * `sin2 + b_im * `cos2;
-            d_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} - b_re * `cos2 + b_im * `sin2;
-            d_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} - b_re * `sin2 - b_im * `cos2; 
+            c_re_dum <= a_re + b_re * `cos2 >>> 16 - b_im * `sin2 >>> 16;
+            c_im_dum <= a_im + b_re * `sin2 >>> 16 + b_im * `cos2 >>> 16;
+            d_re_dum <= a_re - b_re * `cos2 >>> 16 + b_im * `sin2 >>> 16;
+            d_im_dum <= a_im - b_re * `sin2 >>> 16 - b_im * `cos2 >>> 16; 
         end
         default: ;
     endcase
 end
 
-assign c_re = (rotate == 0)? c_re_dum[32:1] : c_re_dum[48:17];
-assign c_im = (rotate == 0)? c_im_dum[32:1] : c_im_dum[48:17];
-assign d_re = (rotate == 0)? d_re_dum[32:1] : d_re_dum[48:17];
-assign d_im = (rotate == 0)? d_im_dum[32:1] : d_im_dum[48:17];
+assign c_re = c_re_dum[32:1];
+assign c_im = c_im_dum[32:1];
+assign d_re = d_re_dum[32:1];
+assign d_im = d_im_dum[32:1];
 assign out_en = (en == 1)? 1 : 0;
 endmodule
 
@@ -84,10 +84,10 @@ module iFFT3(
     input signed [31:0] a_im,
     input signed [31:0] b_re,
     input signed [31:0] b_im,
-    output wire signed [31:0] c_re,
-    output wire signed [31:0] c_im,
-    output wire signed [31:0] d_re,
-    output wire signed [31:0] d_im,
+    output signed [31:0] c_re,
+    output signed [31:0] c_im,
+    output signed [31:0] d_re,
+    output signed [31:0] d_im,
     output out_en
 ); 
 
@@ -104,30 +104,30 @@ always @(posedge clk) begin
             d_im_dum <= a_im - b_im; 
         end
         1: begin
-            c_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} + b_re * `cos1 - b_im * `sin1;
-            c_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} + b_re * `sin1 + b_im * `cos1;
-            d_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} - b_re * `cos1 + b_im * `sin1;
-            d_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} - b_re * `sin1 - b_im * `cos1;
+            c_re_dum <= a_re + b_re * `cos1 >>> 16 - b_im * `sin1 >>> 16;
+            c_im_dum <= a_im + b_re * `sin1 >>> 16 + b_im * `cos1 >>> 16;
+            d_re_dum <= a_re - b_re * `cos1 >>> 16 + b_im * `sin1 >>> 16;
+            d_im_dum <= a_im - b_re * `sin1 >>> 16 - b_im * `cos1 >>> 16;
         end
         2: begin
-            c_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} + b_re * `cos2 - b_im * `sin2;
-            c_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} + b_re * `sin2 + b_im * `cos2;
-            d_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} - b_re * `cos2 + b_im * `sin2;
-            d_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} - b_re * `sin2 - b_im * `cos2;
+            c_re_dum <= a_re + b_re * `cos2 >>> 16 - b_im * `sin2 >>> 16;
+            c_im_dum <= a_im + b_re * `sin2 >>> 16 + b_im * `cos2 >>> 16;
+            d_re_dum <= a_re - b_re * `cos2 >>> 16 + b_im * `sin2 >>> 16;
+            d_im_dum <= a_im - b_re * `sin2 >>> 16 - b_im * `cos2 >>> 16;
         end
         3: begin
-            c_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} + b_re * `cos3 - b_im * `sin3;
-            c_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} + b_re * `sin3 + b_im * `cos3;
-            d_re_dum <= {{16{a_re[31]}}, a_re, {16{1'b0}}} - b_re * `cos3 + b_im * `sin3;
-            d_im_dum <= {{16{a_im[31]}}, a_im, {16{1'b0}}} - b_re * `sin3 - b_im * `cos3;
+            c_re_dum <= a_re + b_re * `cos3 >>> 16 - b_im * `sin3 >>> 16;
+            c_im_dum <= a_im + b_re * `sin3 >>> 16 + b_im * `cos3 >>> 16;
+            d_re_dum <= a_re - b_re * `cos3 >>> 16 + b_im * `sin3 >>> 16;
+            d_im_dum <= a_im - b_re * `sin3 >>> 16 - b_im * `cos3 >>> 16;
         end
         default: ;
     endcase
 end
 
-assign c_re = (rotate == 0)? c_re_dum[32:1] : c_re_dum[48:17];
-assign c_im = (rotate == 0)? c_im_dum[32:1] : c_im_dum[48:17];
-assign d_re = (rotate == 0)? d_re_dum[32:1] : d_re_dum[48:17];
-assign d_im = (rotate == 0)? d_im_dum[32:1] : d_im_dum[48:17];
+assign c_re = c_re_dum[32:1];
+assign c_im = c_im_dum[32:1];
+assign d_re = d_re_dum[32:1];
+assign d_im = d_im_dum[32:1];
 assign out_en = (en == 1)? 1 : 0;
 endmodule
